@@ -1,24 +1,24 @@
 module Barometer
   module Query
     module Service
-      class YahooPlacefinder
+      class Yahoo
         class Api < Utils::Api
           def url
             'http://query.yahooapis.com/v1/public/yql'
           end
 
           def params
-            { q: format_query, format: :json }
+            { q: format_query, format: :json, diagnostics: false }
           end
 
           def unwrap_nodes
-            ['query', 'results', 0, 'Result']
+            ['query', 'results', 'place']
           end
 
           private
 
           def format_query
-            "select * from geo.placefinder where #{field}='#{query.q}' and gflags='R'"
+            "select * from geo.places where #{field}='(#{query.q})' limit 1"
           end
 
           def field

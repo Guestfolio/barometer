@@ -1,9 +1,9 @@
 module Barometer
   module Query
     module Converter
-      class FromWeatherIdToGeocode
+      class FromZipcodeToShortZipcode
         def self.from
-          [:weather_id]
+          [:zipcode]
         end
 
         def initialize(query)
@@ -12,9 +12,10 @@ module Barometer
 
         def call
           return unless can_convert?
-
-          @query.geo = @query.geo.merge( Service::FromWeatherId.new(@query).call )
-          @query.add_conversion(:geocode, @query.geo.to_s)
+          @query.add_conversion(
+            :short_zipcode,
+            @query.get_conversion(:zipcode).q[0..4]
+          )
         end
 
         private
@@ -27,4 +28,4 @@ module Barometer
   end
 end
 
-Barometer::Query::Converter.register(:geocode, Barometer::Query::Converter::FromWeatherIdToGeocode)
+Barometer::Query::Converter.register(:short_zipcode, Barometer::Query::Converter::FromZipcodeToShortZipcode)

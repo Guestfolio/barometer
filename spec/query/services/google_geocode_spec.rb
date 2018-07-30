@@ -2,6 +2,10 @@ require_relative '../../spec_helper'
 
 module Barometer::Query
   RSpec.describe Service::GoogleGeocode, vcr: {
+    match_requests_on: [
+      :method,
+      VCR.request_matchers.uri_without_param(:key)
+    ],
     cassette_name: 'Service::GoogleGeocode'
   } do
     describe '.call' do
@@ -28,8 +32,8 @@ module Barometer::Query
           geo = Service::GoogleGeocode.new(query).call
 
           expect( geo.query ).to eq 'New York, NY, US'
-          expect( geo.latitude ).to eq 40.7143528
-          expect( geo.longitude ).to eq -74.00597309999999
+          expect( geo.latitude ).to eq 40.7127753
+          expect( geo.longitude ).to eq -74.0059728
           expect( geo.locality ).to eq 'New York'
           expect( geo.region ).to eq 'NY'
           expect( geo.country ).to eq 'United States'
@@ -45,8 +49,8 @@ module Barometer::Query
           geo = Service::GoogleGeocode.new(query).call
 
           expect( geo.query ).to be_nil
-          expect( geo.latitude ).to eq 47.000623
-          expect( geo.longitude ).to eq -114.0016495
+          expect( geo.latitude ).to eq 47.0144363
+          expect( geo.longitude ).to eq -113.9995682
           expect( geo.locality ).to eq 'Missoula'
           expect( geo.region ).to eq 'MT'
           expect( geo.country ).to eq 'United States'
